@@ -6,9 +6,6 @@ import matplotlib.pyplot as plt
 # Database connection
 conn = st.connection("postgresql", type="sql")
 
-# Create a cursor object
-cursor = conn.cursor()
-
 # Create 'products' table if it doesn't exist
 create_table_sql = """
     CREATE TABLE IF NOT EXISTS products (
@@ -18,7 +15,7 @@ create_table_sql = """
         rating integer CHECK (rating >= 1 AND rating <= 5)
     )
 """
-cursor.execute(create_table_sql)
+conn.query(create_table_sql)
 conn.commit()
 
 # Streamlit app
@@ -31,7 +28,7 @@ cost = st.number_input("Enter Product Cost:")
 rating = st.number_input("Enter Product Rating (1 to 5):", min_value=1, max_value=5)
 
 if st.button("Insert Product"):
-    cursor.execute("INSERT INTO products (id, name, cost, rating) VALUES (%s, %s, %s, %s)", (id, name, cost, rating))
+    conn.query("INSERT INTO products (id, name, cost, rating) VALUES (%s, %s, %s, %s)", (id, name, cost, rating))
     conn.commit()
     st.success(f"Product inserted: ID - {id}, Name - {name}, Cost - {cost}, Rating - {rating}")
 
@@ -42,7 +39,7 @@ new_cost = st.number_input("Enter New Cost:")
 new_rating = st.number_input("Enter New Rating (1 to 5):", min_value=1, max_value=5)
 
 if st.button("Update Product"):
-    cursor.execute("UPDATE products SET name = %s, cost = %s, rating = %s WHERE id = %s", (new_name, new_cost, new_rating, update_id))
+    conn.query("UPDATE products SET name = %s, cost = %s, rating = %s WHERE id = %s", (new_name, new_cost, new_rating, update_id))
     conn.commit()
     if cursor.rowcount == 0:
         st.warning(f"No product found with ID - {update_id}")
@@ -53,7 +50,7 @@ st.header("Delete Product")
 delete_id = st.text_input("Enter ID of Product to Delete:")
 
 if st.button("Delete Product"):
-    cursor.execute("DELETE FROM products WHERE id = %s", (delete_id,))
+    conn.query("DELETE FROM products WHERE id = %s", (delete_id,))
     conn.commit()
     if cursor.rowcount == 0:
         st.warning(f"No product found with ID - {delete_id}")
@@ -62,7 +59,7 @@ if st.button("Delete Product"):
 
 # Display the table of products
 st.header("Products Table")
-cursor.execute("SELECT * FROM products")
+conn.query("SELECT * FROM products")
 products = cursor.fetchall()
 
 if products:
@@ -99,5 +96,4 @@ else:
     st.warning("No products found in the table.")        
 
 # Close database connections
-cursor.close()
 conn.close()
