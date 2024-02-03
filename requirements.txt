@@ -1,4 +1,4 @@
-psycopg2
+psycopg-binary==2.9.9
 streamlit
 pandas
 matplotlib.pyplot
