@@ -4,13 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Database connection
-conn = psycopg2.connect(
-    database="records_db",
-    user="postgres",
-    password="1234",
-    host="localhost",  
-    port="5432"         
-)
+conn = st.connection("postgresql", type="sql")
 
 # Create a cursor object
 cursor = conn.cursor()
