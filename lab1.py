@@ -5,11 +5,11 @@ import matplotlib.pyplot as plt
 
 # Database connection
 conn = psycopg2.connect(
-    database="records_db",
-    user="postgres",
-    password="1234",
-    host="localhost",  
-    port="5432"         
+    host=st.secrets["host"],
+    user=st.secrets["username"],
+    password=st.secrets["password"],
+    database=st.secrets["database"],
+    port=st.secrets["port"]        
 )
 
 # Create a cursor object
