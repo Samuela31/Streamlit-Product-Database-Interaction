@@ -3,4 +3,4 @@ streamlit
 pandas
 matplotlib
 sqlalchemy
-psycopg2
+
